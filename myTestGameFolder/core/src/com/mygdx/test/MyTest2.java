@@ -39,13 +39,15 @@ public class MyTest2 extends ApplicationAdapter {
 //		img.dispose();
 //	}
 	private boolean DEBUG = false;
-	//private final float SCALE = 2.0f;
+	private final float SCALE = 2.0f;
 
 	private OrthographicCamera camera;
 
 	private Box2DDebugRenderer b2dr;
 	private World world;
 	private Body player;
+	private SpriteBatch batch; //Textúrák renderelésére
+	private Texture texture;
 
 	@Override
 	public void create() {
@@ -53,13 +55,16 @@ public class MyTest2 extends ApplicationAdapter {
 		float h = Gdx.graphics.getHeight();
 
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, w/2, h/2);
+		camera.setToOrtho(false, w/SCALE, h/SCALE);
 
 		world = new World(new Vector2(0, -9.8f), false);
 		b2dr = new Box2DDebugRenderer();
 
 		player = createBox(8, 10, 32, 32, false);
 		createBox(0, 0, 64, 32, true);
+
+		batch = new SpriteBatch();
+		texture = new Texture("TestCharacter2.jpg");
 
 	}
 
@@ -71,17 +76,25 @@ public class MyTest2 extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+		batch.begin();
+		batch.draw(texture, player.getPosition().x*PPM - (texture.getWidth()/2),
+				player.getPosition().y*PPM - (texture.getHeight()/2));
+		batch.end();
+
 		b2dr.render(world, camera.combined.scl(PPM));
+
+		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		camera.setToOrtho(false, width/2, height/2);
+		camera.setToOrtho(false, width/SCALE, height/SCALE);
 	}
 
 	public void dispose() {
 		world.dispose();
 		b2dr.dispose();
+		batch.dispose();
 	}
 
 	public void update(float delta) {
@@ -89,6 +102,7 @@ public class MyTest2 extends ApplicationAdapter {
 
 		inputUpdate(delta);
 		cameraUpdate(delta);
+		batch.setProjectionMatrix(camera.combined);
 	}
 
 	public void inputUpdate(float delta) {
