@@ -15,11 +15,13 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.mygdx.mabg.physicseditor.PhysicsShapeCache;
 import com.mygdx.mabg.view.Bird;
+import com.mygdx.mabg.view.Block;
 
 import static com.mygdx.mabg.utils.Constants.PPM;
 
-public class GameController /*implements Disposable*/ extends Game implements InputProcessor {
+public class GameController extends Game implements InputProcessor {
 
     private boolean DEBUG = false;
     private final float SCALE = 2.0f;
@@ -30,10 +32,16 @@ public class GameController /*implements Disposable*/ extends Game implements In
     private World world;
     private OrthographicCamera camera;
     private Box2DDebugRenderer b2dr;
-    private Bird b;
-    private Body bird, box, ground;
-    private Texture texture;
+    private Body bird2, box, box2, box3, box4, box5, ground;
+    private Texture texture, groundTexture, background, block;
     private Sprite sprite;
+
+    private Block testBlock;
+    private Bird bird;
+
+    PhysicsShapeCache physicsBodies;
+    private Body blockBody;
+    private GamePhysics physicsBlock;
 
     public GameController() {
     }
@@ -51,18 +59,27 @@ public class GameController /*implements Disposable*/ extends Game implements In
 
         batch = new SpriteBatch();
 
-//        b = new Bird();
+        testBlock = new Block("testCharacter.jpg", this, 70, 10);
+//        bird = new Bird("testCharacter.jpg", this, 10, 10);
 
-        bird = createBox(8, 10, 32, 32, false);
+        bird2 = createBox(0, 10, 32, 32, false);
         ground = createBox(0, 0, 256, 32, true);
-        box = createBox(80, 10, 20, 64, false);
 
-//        batch = new SpriteBatch();
+//        blockBody = physicsBlock.createBody("block", 10, 20, 0);
+
+//        box2 = createBox(95, 8, 20, 64, false);
+//        box3 = createBox(90, 100, 64, 20, false);
+//        box4 = createBox(70, 150, 20, 64, false);
+//        box5 = createBox(95, 150, 20, 64, false);
+
         texture = new Texture("testCharacter.jpg");
+        groundTexture = new Texture("ground.png");
+        background = new Texture("background.png");
+//        block = new Texture("block.png");
         sprite = new Sprite(texture);
 
-        sprite.setPosition(bird.getPosition().x,
-                bird.getPosition().y);
+        sprite.setPosition(bird2.getPosition().x,
+                bird2.getPosition().y);
     }
 
     @Override
@@ -83,9 +100,24 @@ public class GameController /*implements Disposable*/ extends Game implements In
             sprite.setPosition(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY());
 
         batch.begin();
-//        batch.draw(texture, bird.getPosition().x*PPM - (texture.getWidth()/2),
-//                bird.getPosition().y*PPM - (texture.getHeight()/2));
-            batch.draw(sprite, sprite.getX(), sprite.getY());
+        batch.draw(background, -350, -200);
+        testBlock.draw();
+        bird.draw();
+        batch.draw(texture, bird2.getPosition().x*PPM - (texture.getWidth()/2),
+                bird2.getPosition().y*PPM - (texture.getHeight()/2));
+//            batch.draw(sprite, sprite.getX(), sprite.getY());
+            batch.draw(groundTexture, ground.getPosition().x*PPM - (groundTexture.getWidth()/7),
+                ground.getPosition().y*PPM - (groundTexture.getHeight()/10), 256, 32);
+//            batch.draw(block, box.getPosition().x*PPM - (block.getWidth()/16),
+//                    box.getPosition().y*PPM - (block.getHeight()/6), 20, 64);
+//        batch.draw(block, box2.getPosition().x*PPM - (block.getWidth()/16),
+//                box2.getPosition().y*PPM - (block.getHeight()/6), 20, 64);
+//        batch.draw(block, box3.getPosition().x*PPM - (block.getWidth()/5),
+//                box3.getPosition().y*PPM - (block.getHeight()/16), 64, 20);
+//        batch.draw(block, box4.getPosition().x*PPM - (block.getWidth()/16),
+//                box4.getPosition().y*PPM - (block.getHeight()/6), 20, 64);
+//        batch.draw(block, box5.getPosition().x*PPM - (block.getWidth()/16),
+//                box5.getPosition().y*PPM - (block.getHeight()/6), 20, 64);
         batch.end();
 
         b2dr.render(world, camera.combined.scl(PPM));
@@ -100,10 +132,10 @@ public class GameController /*implements Disposable*/ extends Game implements In
 
     public void update(float delta) {
         world.step(1/60f, 6, 2);
-//
+
         inputUpdate(delta);
         cameraUpdate(delta);
-//        batch.setProjectionMatrix(camera.combined);
+        batch.setProjectionMatrix(camera.combined);
     }
 
     public void inputUpdate(float delta) {
@@ -116,19 +148,19 @@ public class GameController /*implements Disposable*/ extends Game implements In
             horizontalForce += 1;
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) { //LEFT
-            bird.applyForceToCenter(0, 300, false);
+            bird2.applyForceToCenter(0, 300, false);
         }
 //        if(Gdx.input.isTouched()) {
 //            box.applyForceToCenter();
 //        }
 
-        bird.setLinearVelocity(horizontalForce * 5, bird.getLinearVelocity().y);
+        bird2.setLinearVelocity(horizontalForce * 5, bird2.getLinearVelocity().y);
     }
 
     public void cameraUpdate(float delta) {
         Vector3 position = camera.position;
-        position.x = bird.getPosition().x * PPM;
-        position.y = bird.getPosition().y * PPM;
+        position.x = bird2.getPosition().x * PPM;
+        position.y = bird2.getPosition().y * PPM;
         camera.position.set(position);
 
         camera.update();
@@ -154,6 +186,10 @@ public class GameController /*implements Disposable*/ extends Game implements In
         shape.dispose();
 
         return pBody;
+    }
+
+    public SpriteBatch getSpriteBatch() {
+        return batch;
     }
 
 //    @Override

@@ -6,12 +6,13 @@ import com.mygdx.mabg.controller.GameController;
 
 import static com.mygdx.mabg.utils.Constants.PPM;
 
-public class Pig {
+public class Block {
+
     private Body body;
     private Texture texture;
     private GameController controller;
 
-    public Pig(String textureName, GameController gameController, int x, int y) {
+    public Block(String textureName, GameController gameController, int x, int y) {
         controller = gameController;
         texture = new Texture(textureName);
 
@@ -22,4 +23,5 @@ public class Pig {
         controller.getSpriteBatch().draw(texture, body.getPosition().x*PPM - (texture.getWidth()/2),
                 body.getPosition().y*PPM - (texture.getHeight()/2));
     }
+
 }

@@ -14,15 +14,20 @@ public class MyAngryBirds extends Game {
     private Texture texture;
     private World world;
 
-    public static PlayScreen playScreen = null;
-    public static GameController game = null;
+//    public static PlayScreen playScreen = null;
+//    public static GameController game = null;
+    public static GamePhysics physics = null;
 
 
     @Override
     public void create() {
 
-        game = new GameController();
-        game.create();
+//        game = new GameController();
+//        game.create();
+
+        physics = new GamePhysics();
+        physics.create();
+
 //        batch = new SpriteBatch();
 //        playScreen = new PlayScreen();
 //        playScreen.create();
@@ -32,19 +37,27 @@ public class MyAngryBirds extends Game {
 
     @Override
     public void resize(int width, int height) {
-        game.resize(width, height);
+//        game.resize(width, height);
 //        playScreen.resize(width, height);
+        physics.resize(width, height);
     }
 
 //    @Override
 //    public void show() {
-//        playScreen.show();
+//        physics.show();
 //    }
 
     @Override
     public void render() {
         super.render();
-        game.render();
+//        game.render();
+        physics.render();
+    }
+
+    @Override
+    public void dispose() {
+//        playScreen.dispose();
+        physics.dispose();
     }
 
 //    @Override
@@ -90,10 +103,5 @@ public class MyAngryBirds extends Game {
 //    @Override
 //    public void hide() {
 //        playScreen.hide();
-//    }
-//
-//    @Override
-//    public void dispose() {
-//        playScreen.dispose();
 //    }
 }

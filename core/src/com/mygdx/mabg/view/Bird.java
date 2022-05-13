@@ -1,5 +1,6 @@
 package com.mygdx.mabg.view;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -7,40 +8,40 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 //import com.mygdx.mabg.model.Body;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.mygdx.mabg.controller.GameController;
+import com.mygdx.mabg.controller.GamePhysics;
 
 import static com.mygdx.mabg.utils.Constants.PPM;
 
-public class Bird extends Sprite {
-    public enum State {FLYING, FALLING, ONAIR, STANDING, STOPPED}
+public class Bird {
 
-    public State currentState;
-    public State previousState;
+    private Body body;
+    private Texture texture;
+//    private GameController controller;
+//
+//    public Bird(String textureName, GameController gameController, int x, int y) {
+//        controller = gameController;
+//        texture = new Texture(textureName);
+//
+//        body = gameController.createBox(x, y, texture.getWidth(), texture.getHeight(), false);
+//    }
+//
+//    public void draw() {
+//        controller.getSpriteBatch().draw(texture, body.getPosition().x*PPM - (texture.getWidth()/2),
+//                body.getPosition().y*PPM - (texture.getHeight()/2));
+//    }
 
-    public static World world;
-    public Body bird;
-    public float gravity;
-    private TextureRegion textureRegion;
+    private GamePhysics physics;
 
+    public Bird(String textureName, GamePhysics gamePhysics, int x, int y) {
+        physics = gamePhysics;
+        texture = new Texture(textureName);
 
-    public Bird() {
+        body = gamePhysics.createBody("bird01_2", 20, 20, 0);
     }
 
-//    public State getState() {
-//        if (isZero(bird.velocity.x, bird.velocity.y) && previousState == State.STANDING) {
-//            return currentState = State.STANDING;
-//        } else if (isZero(bird.velocity.x, bird.velocity.y) && previousState != State.STANDING) {
-//            return currentState = State.STOPPED;
-//        } else if (bird.velocity.x > 0 && bird.velocity.y > 0 && previousState != State.FALLING && previousState != State.ONAIR) {
-//            return currentState = State.FLYING;
-//        } else if (bird.velocity.x > 0 && bird.velocity.y < 0 && previousState != State.ONAIR) {
-//            return currentState = State.FALLING;
-//        } else {
-//            return previousState = currentState = State.ONAIR;
-//        }
-//    }
-
-
-//    public boolean isZero(float x, float y) {
-//        return x == 0 && y == 0;
-//    }
+    public void draw() {
+        physics.getSpriteBatch().draw(texture, body.getPosition().x*PPM - (texture.getWidth()/2),
+                body.getPosition().y*PPM - (texture.getHeight()/2));
+    }
 }
