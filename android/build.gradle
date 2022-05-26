@@ -17,11 +17,14 @@ android {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
     defaultConfig {
-        applicationId "com.mygdx.game"
-        minSdkVersion 14
+        applicationId "com.mygdx.mabg"
+        minSdkVersion 16
         targetSdkVersion 32
         versionCode 1
         versionName "1.0"
+
+        // Enabling multidex support.
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -86,7 +89,7 @@ task run(type: Exec) {
     }
 
     def adb = path + "/platform-tools/adb"
-    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.mygdx.game/com.mygdx.game.AndroidLauncher'
+    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.mygdx.mabg/com.mygdx.mabg.AndroidLauncher'
 }
 
 eclipse.project.name = appName + "-android"

@@ -1,0 +1,32 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.mygdx.mabg.test" >
+4
+5    <uses-sdk
+5-->C:\jbox2Dthings\MyAngryBirdsGame\android\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16825112146693984695.xml:5:5-74
+6        android:minSdkVersion="16"
+6-->C:\jbox2Dthings\MyAngryBirdsGame\android\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16825112146693984695.xml:5:15-41
+7        android:targetSdkVersion="32" />
+7-->C:\jbox2Dthings\MyAngryBirdsGame\android\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16825112146693984695.xml:5:42-71
+8
+9    <instrumentation
+9-->C:\jbox2Dthings\MyAngryBirdsGame\android\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16825112146693984695.xml:11:5-15:64
+10        android:name="android.test.InstrumentationTestRunner"
+10-->C:\jbox2Dthings\MyAngryBirdsGame\android\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16825112146693984695.xml:11:22-75
+11        android:functionalTest="false"
+11-->C:\jbox2Dthings\MyAngryBirdsGame\android\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16825112146693984695.xml:14:22-52
+12        android:handleProfiling="false"
+12-->C:\jbox2Dthings\MyAngryBirdsGame\android\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16825112146693984695.xml:13:22-53
+13        android:label="Tests for com.mygdx.mabg"
+13-->C:\jbox2Dthings\MyAngryBirdsGame\android\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16825112146693984695.xml:15:22-62
+14        android:targetPackage="com.mygdx.mabg" />
+14-->C:\jbox2Dthings\MyAngryBirdsGame\android\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16825112146693984695.xml:12:22-60
+15
+16    <application android:debuggable="true" >
+16-->C:\jbox2Dthings\MyAngryBirdsGame\android\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16825112146693984695.xml:7:5-9:19
+17        <uses-library android:name="android.test.runner" />
+17-->C:\jbox2Dthings\MyAngryBirdsGame\android\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16825112146693984695.xml:8:9-60
+17-->C:\jbox2Dthings\MyAngryBirdsGame\android\build\intermediates\tmp\manifest\androidTest\debug\tempFile1ProcessTestManifest16825112146693984695.xml:8:23-57
+18    </application>
+19
+20</manifest>
