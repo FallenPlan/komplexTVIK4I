@@ -6,6 +6,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.mygdx.mabg.controller.GameController;
 import com.mygdx.mabg.controller.GamePhysics;
 import com.mygdx.mabg.controller.MyAngryBirds;
+import com.mygdx.mabg.controller.Runnable;
 import com.mygdx.mabg.view.PlayScreen;
 
 public class DesktopLauncher {
@@ -18,7 +19,8 @@ public class DesktopLauncher {
 //		new Lwjgl3Application(new MyJavaGame(), config);
 //		new Lwjgl3Application(new GameController(), config);
 
-		new Lwjgl3Application(new MyAngryBirds(), config);
+//		new Lwjgl3Application(new MyAngryBirds(), config);
+		new Lwjgl3Application(new Runnable(), config);
 
 //		new Lwjgl3Application(new PlayScreen(), config);
 //		new Lwjgl3Application(new GamePhysics(), config);
