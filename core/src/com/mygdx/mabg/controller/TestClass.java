@@ -9,41 +9,47 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.mabg.physicseditor.PhysicsShapeCache;
 import com.mygdx.mabg.view.Bird;
 import com.mygdx.mabg.view.Block;
 
+import java.util.HashMap;
+
 import static com.mygdx.mabg.utils.Constants.PPM;
 
-public class GameController extends Game implements InputProcessor {
+public class TestClass extends Game implements InputProcessor {
+
+    final HashMap<String, Sprite> sprites = new HashMap<String, Sprite>();
 
     private boolean DEBUG = false;
+
     private final float SCALE = 2.0f;
 
     private SpriteBatch batch; //Textúrák renderelésére
-    public Stage stage;
     private Viewport viewport;
     private World world;
     private OrthographicCamera camera;
     private Box2DDebugRenderer b2dr;
-    private Body bird2, box, box2, box3, box4, box5, ground;
-    private Texture texture, groundTexture, background, block;
+
+    private Body ground;
+    private Bird bird;
+//    private Block block;
+    private Body block;
+    private Texture texture, groundTexture, background, blockTexture;
+    private TextureAtlas textureAtlas;
+
     private Sprite sprite;
 
-    private Block testBlock;
-    private Bird bird;
+//    private PhysicsShapeCache physicsBodies;
 
-    PhysicsShapeCache physicsBodies;
-    private Body blockBody;
-    private GamePhysics physicsBlock;
-
-    public GameController() {
+    public TestClass() {
     }
 
     @Override
@@ -59,28 +65,27 @@ public class GameController extends Game implements InputProcessor {
 
         batch = new SpriteBatch();
 
-//        testBlock = new Block("block.png", this, 70, 10);
 //        bird = new Bird("testCharacter.jpg", this, 10, 10);
 
-        bird2 = createBox(0, 10, 32, 32, false);
-        ground = createBox(0, 0, 256, 32, true);
+//        block = new Block();
+//        TextureAtlas textureAtlas1 = new TextureAtlas();
 
-//        blockBody = physicsBlock.createBody("block", 10, 20, 0);
+//        block = createBody("block", 10, 50, 0);
+//        block = createBody(10, 10, 20, 30, false);
 
-        box = createBox(70, 8, 20, 64, false);
-        box2 = createBox(95, 8, 20, 64, false);
-        box3 = createBox(90, 100, 64, 20, false);
-        box4 = createBox(70, 150, 20, 64, false);
-        box5 = createBox(95, 150, 20, 64, false);
+//        bird = createBody(20,20,30,30,false);
+        ground = createBody(0,0,200,50,true);
+        block = createBody(40, 20, 40, 80, false);
 
         texture = new Texture("testCharacter.jpg");
-        groundTexture = new Texture("ground.png");
         background = new Texture("background.png");
-        block = new Texture("block.png");
+        groundTexture = new Texture("ground.png");
+        blockTexture = new Texture("block.png");
         sprite = new Sprite(texture);
 
-        sprite.setPosition(bird2.getPosition().x,
-                bird2.getPosition().y);
+//        sprite.setPosition(bird.getPosition().x,
+//                bird.getPosition().y);
+
     }
 
     @Override
@@ -102,28 +107,80 @@ public class GameController extends Game implements InputProcessor {
 
         batch.begin();
         batch.draw(background, -350, -200);
-//        testBlock.draw();
+
         bird.draw();
-        batch.draw(texture, bird2.getPosition().x*PPM - (texture.getWidth()/2),
-                bird2.getPosition().y*PPM - (texture.getHeight()/2));
-//            batch.draw(sprite, sprite.getX(), sprite.getY());
-        batch.draw(groundTexture, ground.getPosition().x*PPM - (groundTexture.getWidth()/7),
-                ground.getPosition().y*PPM - (groundTexture.getHeight()/10), 256, 32);
-        batch.draw(block, box.getPosition().x*PPM - (block.getWidth()/16),
-                box.getPosition().y*PPM - (block.getHeight()/6), 20, 64);
-        batch.draw(block, box2.getPosition().x*PPM - (block.getWidth()/16),
-                box2.getPosition().y*PPM - (block.getHeight()/6), 20, 64);
-        batch.draw(block, box3.getPosition().x*PPM - (block.getWidth()/5),
-                box3.getPosition().y*PPM - (block.getHeight()/16), 64, 20);
-        batch.draw(block, box4.getPosition().x*PPM - (block.getWidth()/16),
-                box4.getPosition().y*PPM - (block.getHeight()/6), 20, 64);
-        batch.draw(block, box5.getPosition().x*PPM - (block.getWidth()/16),
-                box5.getPosition().y*PPM - (block.getHeight()/6), 20, 64);
+//        draw(texture, bird.);
+//        batch.draw(blockTexture, -20, -40, 40, 80);
+        draw(blockTexture, block);
+//        draw(groundTexture, ground);
+        batch.draw(groundTexture, -100, -25, 200, 65);
+
+//        bird.getUserData() = bird.getAngle();
+//        bird.getAngle();
         batch.end();
 
         b2dr.render(world, camera.combined.scl(PPM));
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) Gdx.app.exit();
+    }
+
+//    public Body createBody(String name, float x, float y, float rotation) {
+//        Body body = physicsBodies.createBody(name, world, SCALE, SCALE);
+//        body.setTransform(x, y, rotation);
+//        return body;
+//    }
+
+    public Body createBody(int x, int y, int width, int height, boolean isStatic) {
+        Body pBody;
+        BodyDef def = new BodyDef();
+
+        if(isStatic)
+            def.type = BodyDef.BodyType.StaticBody;
+        else
+            def.type = BodyDef.BodyType.DynamicBody;
+
+        def.position.set(x/PPM, y/PPM);
+        def.fixedRotation = false;
+        pBody = world.createBody(def);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(width/2/PPM, height/2/PPM); //A centerből méri a 32-t ezért osztani kell 2 -vel, hogy 32 magas legyen és ne 64!
+
+        pBody.createFixture(shape, 1.0f);
+        shape.dispose();
+
+        return pBody;
+    }
+
+    private void addSprites() {
+        Array<TextureAtlas.AtlasRegion> regions = textureAtlas.getRegions();
+
+        for(TextureAtlas.AtlasRegion region : regions) {
+            Sprite sprite = textureAtlas.createSprite(region.name);
+
+            float width = sprite.getWidth() * SCALE;
+            float height = sprite.getHeight() * SCALE;
+
+            sprite.setSize(width, height);
+            sprite.setOrigin(0, 0);
+
+            sprites.put(region.name, sprite);
+        }
+    }
+
+    private void drawSprite(String name, float x, float y, float degrees) {
+
+        Sprite sprite = sprites.get(name);
+        sprite.setPosition(x, y);
+        sprite.setRotation(degrees);
+        sprite.setOrigin(0f,0f);
+        sprite.draw(batch);
+    }
+
+    public void draw(Texture texture, Body body) {
+        getSpriteBatch().draw(texture, body.getPosition().x*PPM - (texture.getWidth()/2),
+                body.getPosition().y*PPM - (texture.getHeight()/2));
+//        batch.draw(texture, texture.getWidth()/2, texture.getHeight()/2, 10,10);
     }
 
     @Override
@@ -149,59 +206,24 @@ public class GameController extends Game implements InputProcessor {
             horizontalForce += 1;
         }
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) { //LEFT
-            bird2.applyForceToCenter(0, 300, false);
+            bird.getBody().applyForceToCenter(0, 300, false);
         }
-//        if(Gdx.input.isTouched()) {
-//            box.applyForceToCenter();
-//        }
 
-        bird2.setLinearVelocity(horizontalForce * 5, bird2.getLinearVelocity().y);
+        bird.getBody().setLinearVelocity(horizontalForce * 5, bird.getBody().getLinearVelocity().y);
     }
 
     public void cameraUpdate(float delta) {
         Vector3 position = camera.position;
-        position.x = bird2.getPosition().x * PPM;
-        position.y = bird2.getPosition().y * PPM;
+        position.x = bird.getBody().getPosition().x * PPM;
+        position.y = bird.getBody().getPosition().y * PPM;
         camera.position.set(position);
 
         camera.update();
     }
 
-    public Body createBox(int x, int y, int width, int height, boolean isStatic) {
-        Body pBody;
-        BodyDef def = new BodyDef();
-
-        if(isStatic)
-            def.type = BodyDef.BodyType.StaticBody;
-        else
-            def.type = BodyDef.BodyType.DynamicBody;
-
-        def.position.set(x/PPM, y/PPM);
-        def.fixedRotation = false;
-        pBody = world.createBody(def);
-
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width/2/PPM, height/2/PPM); //A centerből méri a 32-t ezért osztani kell 2 -vel, hogy 32 magas legyen és ne 64!
-
-        pBody.createFixture(shape, 1.0f);
-        shape.dispose();
-
-        return pBody;
-    }
-
     public SpriteBatch getSpriteBatch() {
         return batch;
     }
-
-//    @Override
-//    public boolean touchDown (int x, int y, int pointer, int button) {
-//        if (button == Input.Buttons.LEFT) {
-//            // Some stuff
-//
-//            return true;
-//        }
-//        return false;
-//    }
 
     public void dispose() {
         world.dispose();
@@ -249,4 +271,5 @@ public class GameController extends Game implements InputProcessor {
     public boolean scrolled(float amountX, float amountY) {
         return false;
     }
+
 }

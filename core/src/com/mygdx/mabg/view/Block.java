@@ -1,8 +1,10 @@
 package com.mygdx.mabg.view;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.mygdx.mabg.controller.GameController;
+import com.mygdx.mabg.controller.Test2;
 
 import static com.mygdx.mabg.utils.Constants.PPM;
 
@@ -10,18 +12,31 @@ public class Block {
 
     private Body body;
     private Texture texture;
-    private GameController controller;
 
-    public Block(String textureName, GameController gameController, int x, int y) {
+    private Sprite sprite;
+
+    //    private TestClass controller;
+    private Test2 controller;
+
+
+    public Block(String textureName, Test2 gameController, int x, int y) {
         controller = gameController;
         texture = new Texture(textureName);
 
-        body = gameController.createBox(x, y, texture.getWidth(), texture.getHeight(), false);
+        sprite = new Sprite(texture);
+
+        body = gameController.createVerticalBody(x, y, texture.getWidth(), texture.getHeight(), false);
     }
 
-    public void draw() {
-        controller.getSpriteBatch().draw(texture, body.getPosition().x*PPM - (texture.getWidth()/2),
-                body.getPosition().y*PPM - (texture.getHeight()/2));
+    public Body getBody() {
+        return body;
+    }
+
+    public void drawVertical() {
+        sprite.setPosition(body.getPosition().x*PPM - (sprite.getWidth()/2), body.getPosition().y*PPM - (sprite.getHeight()/2));
+        sprite.setRotation(body.getAngle()* MathUtils.radiansToDegrees);
+        sprite.setOrigin(sprite.getWidth()/2,sprite.getHeight()/2);
+        sprite.draw(controller.getSpriteBatch());
     }
 
 }
